@@ -4,9 +4,10 @@
 ############################################################
 FROM registry.cn-hangzhou.aliyuncs.com/ossrs/srs:dev AS build
 
-RUN make
-RUN cp objs/signaling /usr/local/bin/signaling
-RUN cp -R www /usr/local/www
+COPY . /tmp/signaling
+RUN cd /tmp/signaling && make
+RUN cp /tmp/signaling/objs/signaling /usr/local/bin/signaling
+RUN cp -R /tmp/signaling/www /usr/local/www
 
 ############################################################
 # dist
