@@ -42,6 +42,8 @@ Build and run signaling:
 cd ~/git/srs/trunk/3rdparty/signaling && make && ./objs/signaling
 ```
 
+Open demos by localhost: http://localhost:1989/demos
+
 Build and run httpx-static for HTTPS/WSS:
 
 ```bash
@@ -51,9 +53,10 @@ cd ~/git/srs/trunk/3rdparty/httpx-static && make &&
     -proxy http://127.0.0.1:8080/
 ```
 
-Open demos:
+Open demos by HTTPS or IP:
 
 * http://localhost/demos/
 * https://localhost/demos/
+* https://192.168.3.6/demos/
 
 Winlin 2021.05
