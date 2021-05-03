@@ -13,11 +13,15 @@ docker run --rm --env CANDIDATE=$(ifconfig en0 inet| grep 'inet '|awk '{print $2
   objs/srs -c conf/rtc.conf
 ```
 
+> Note: More images and version is [here](https://cr.console.aliyun.com/repository/cn-hangzhou/ossrs/srs/images).
+
 Build and run signaling:
 
 ```bash
-cd srs/trunk/3rdparty/signaling && make && ./objs/signaling
+docker run --rm -p 1989:1989 registry.cn-hangzhou.aliyuncs.com/ossrs/signaling:v1.0.3
 ```
+
+> Note: More images and version is [here](https://cr.console.aliyun.com/repository/cn-hangzhou/ossrs/signaling/images). 
 
 Open the H5 demos:
 
