@@ -18,7 +18,7 @@ docker run --rm --env CANDIDATE=$(ifconfig en0 inet| grep 'inet '|awk '{print $2
 Build and run signaling:
 
 ```bash
-docker run --rm -p 1989:1989 registry.cn-hangzhou.aliyuncs.com/ossrs/signaling:v1.0.3
+docker run --rm -p 1989:1989 registry.cn-hangzhou.aliyuncs.com/ossrs/signaling:v1.0.4
 ```
 
 > Note: More images and version is [here](https://cr.console.aliyun.com/repository/cn-hangzhou/ossrs/signaling/images). 
