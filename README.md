@@ -7,8 +7,10 @@ WebRTC signaling for https://github.com/ossrs/srs
 Build and [run SRS](https://github.com/ossrs/srs/tree/4.0release#usage):
 
 ```bash
-git clone -b 4.0release https://gitee.com/ossrs/srs.git srs &&
-cd srs/trunk && ./configure && make && ./objs/srs -c conf/rtc.conf
+docker run --rm --env CANDIDATE=$(ifconfig en0 inet| grep 'inet '|awk '{print $2}') \
+  -p 1935:1935 -p 8080:8080 -p 1985:1985 -p 8000:8000/udp \
+  registry.cn-hangzhou.aliyuncs.com/ossrs/srs:v4.0.95 \
+  objs/srs -c conf/rtc.conf
 ```
 
 Build and run signaling:

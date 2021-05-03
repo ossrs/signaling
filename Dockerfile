@@ -18,7 +18,7 @@ FROM centos:7 AS dist
 EXPOSE 1989
 # SRS binary, config files and srs-console.
 COPY --from=build /usr/local/bin/signaling /usr/local/bin/
-COPY --from=build /usr/local/www /usr/local/
+COPY --from=build /usr/local/www /usr/local/www
 # Default workdir and command.
 WORKDIR /usr/local
 CMD ["./bin/signaling"]
