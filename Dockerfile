@@ -7,7 +7,7 @@ FROM registry.cn-hangzhou.aliyuncs.com/ossrs/srs:dev AS build
 COPY . /tmp/signaling
 RUN cd /tmp/signaling && make
 RUN cp /tmp/signaling/objs/signaling /usr/local/bin/signaling
-RUN cp -R /tmp/signaling/www /usr/local/www
+RUN cp -R /tmp/signaling/www /usr/local/
 
 ############################################################
 # dist
