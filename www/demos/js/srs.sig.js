@@ -59,7 +59,7 @@ function SrsRtcSignalingAsync() {
     // The message is a json object.
     self.send = async function (message) {
         return new Promise(function (resolve, reject) {
-            var r = {tid: new Date().getTime().toString(16), msg: message};
+            var r = {tid: Number(new Date().getTime() + parseInt(String(Math.random() * 10000000000))).toString(16), msg: message};
             self._internals.msgs[r.tid] = {resolve: resolve, reject: reject};
             self.ws.send(JSON.stringify(r));
         });
@@ -108,7 +108,7 @@ function SrsRtcSignalingParse(location) {
     room = room? room.split('&')[0] : null;
 
     let display = location.href.split('display=')[1];
-    display = display? display.split('&')[0] : new Date().getTime().toString(16).substr(3);
+    display = display? display.split('&')[0] : Number(new Date().getTime() + parseInt(String(Math.random() * 10000000000))).toString(16).substr(3);
 
     let autostart = location.href.split('autostart=')[1];
     autostart = autostart && autostart.split('&')[0] === 'true';
@@ -119,6 +119,7 @@ function SrsRtcSignalingParse(location) {
         query = query.replace('wss=' + wsSchema, '');
         query = query.replace('wsh=' + wsHost, '');
         query = query.replace('wsp=' + wsPort, '');
+        query = query.replace('host=' + host, '');
         if (room) {
             query = query.replace('room=' + room, '');
         }
@@ -130,6 +131,9 @@ function SrsRtcSignalingParse(location) {
         }
         query = query.replace('?&', '?');
         if (query.lastIndexOf('?') === query.length - 1) {
+            query = query.substr(0, query.length - 1);
+        }
+        if (query.lastIndexOf('&') === query.length - 1) {
             query = query.substr(0, query.length - 1);
         }
     }
