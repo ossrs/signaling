@@ -100,7 +100,6 @@ function SrsRtcSignalingParse(location) {
 
     let wsPort = location.href.split('wsp=')[1];
     wsPort = wsPort? wsPort.split('&')[0] : location.host.split(':')[1];
-    wsHost = wsPort? wsHost.split(':')[0] + ':' + wsPort : wsHost;
 
     let host = location.href.split('host=')[1];
     host = host? host.split('&')[0] : location.hostname;
@@ -114,8 +113,32 @@ function SrsRtcSignalingParse(location) {
     let autostart = location.href.split('autostart=')[1];
     autostart = autostart && autostart.split('&')[0] === 'true';
 
+    // Remove data in query.
+    let rawQuery = query;
+    if (query) {
+        query = query.replace('wss=' + wsSchema, '');
+        query = query.replace('wsh=' + wsHost, '');
+        query = query.replace('wsp=' + wsPort, '');
+        if (room) {
+            query = query.replace('room=' + room, '');
+        }
+        query = query.replace('display=' + display, '');
+        query = query.replace('autostart=' + autostart, '');
+
+        while (query.indexOf('&&') >= 0) {
+            query = query.replace('&&', '&');
+        }
+        query = query.replace('?&', '?');
+        if (query.lastIndexOf('?') === query.length - 1) {
+            query = query.substr(0, query.length - 1);
+        }
+    }
+
+    // Regenerate the host of websocket.
+    wsHost = wsPort? wsHost.split(':')[0] + ':' + wsPort : wsHost;
+
     return {
-        query: query, wsSchema: wsSchema, wsHost: wsHost, host: host,
+        query: query, rawQuery: rawQuery, wsSchema: wsSchema, wsHost: wsHost, host: host,
         room: room, display: display, autostart: autostart,
     };
 }
