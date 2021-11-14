@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Please use: ./auto/pub.sh"
+exit 1;
+
 SRS_GIT=$HOME/git/signaling
 SRS_TAG=
 
