@@ -71,17 +71,17 @@ func (v *Room) Add(p *Participant) error {
 	return nil
 }
 
-func (v *Room) Get(display string) *Participant {
+func (v *Room) Get(display string) (*Participant, error) {
 	v.lock.RLock()
 	defer v.lock.RUnlock()
 
 	for _, r := range v.Participants {
 		if r.Display == display {
-			return r
+			return r, nil
 		}
 	}
 
-	return nil
+	return nil, errors.Errorf("Participant %v does not exist in room %v", display, v.Name)
 }
 
 func (v *Room) Remove(p *Participant) {
@@ -279,7 +279,10 @@ func main() {
 					}
 
 					r, _ := rooms.LoadOrStore(obj.Message.Room, &Room{Name: obj.Message.Room})
-					p := r.(*Room).Get(obj.Message.Display)
+					p, err := r.(*Room).Get(obj.Message.Display)
+					if err != nil {
+						return errors.Wrapf(err, "publish")
+					}
 
 					// Now, the peer is publishing.
 					p.Publishing = true
@@ -299,7 +302,10 @@ func main() {
 					}
 
 					r, _ := rooms.LoadOrStore(obj.Message.Room, &Room{Name: obj.Message.Room})
-					p := r.(*Room).Get(obj.Message.Display)
+					p, err := r.(*Room).Get(obj.Message.Display)
+					if err != nil {
+						return errors.Wrapf(err, "control")
+					}
 
 					go r.(*Room).Notify(ctx, p, action.Message.Action, obj.Message.Call, obj.Message.Data)
 				} else {
