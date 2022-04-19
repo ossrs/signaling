@@ -1,6 +1,6 @@
 # signaling
 
-WebRTC signaling for https://github.com/ossrs/srs
+A demo WebRTC signaling for https://github.com/ossrs/srs
 
 ## Usage
 
