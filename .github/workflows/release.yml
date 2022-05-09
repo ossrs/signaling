@@ -1,4 +1,4 @@
-name: "Release"
+name: "Release SRS demo signaling"
 
 on:
   push:
@@ -15,6 +15,13 @@ jobs:
       # Git checkout
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      # Generate variables like:
+      #   SRS_DROPLET_EIP=1.2.3.4
+      - name: Build droplet variables
+        run: |
+          SRS_DROPLET_EIP=$(dig +short lh.ossrs.net)
+          echo "SRS_DROPLET_EIP=$SRS_DROPLET_EIP" >> $GITHUB_ENV
 
       ################################################################
       # Build
@@ -48,4 +55,30 @@ jobs:
           docker tag ossrs/signaling:$SRS_TAG registry.cn-hangzhou.aliyuncs.com/ossrs/signaling:$SRS_TAG
           docker tag ossrs/signaling:$SRS_TAG registry.cn-hangzhou.aliyuncs.com/ossrs/signaling:$SRS_MAJOR
           docker push --all-tags registry.cn-hangzhou.aliyuncs.com/ossrs/signaling
+
+      ################################################################
+      # Execute command in a ssh, because ufw limit the rate.
+      - name: Restart the containers
+        env:
+          SEARCH_APIKEY: ${{ secrets.SEARCH_APIKEY }}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SRS_DROPLET_EIP }}
+          username: root
+          key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
+          port: 22
+          envs: SRS_TAG,SRS_MAJOR
+          timeout: 60s
+          command_timeout: 30m
+          script: |
+            #
+            #ufw allow 1989 # For SRS demo signaling service.
+            #
+            # Restart SRS signaling service
+            for ((i=0; i < 5; i++)); do
+              if [[ $(docker ps -af name=docs-signaling |wc -l) -eq 1 ]]; then echo "Killed"; break; fi;
+              docker rm -f docs-signaling; sleep 0.3;
+            done
+            docker run -d -it --restart always --name docs-signaling -p 1989:1989 \
+              registry.cn-hangzhou.aliyuncs.com/ossrs/signaling:$SRS_TAG
 
