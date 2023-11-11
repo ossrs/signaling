@@ -59,8 +59,6 @@ jobs:
       ################################################################
       # Execute command in a ssh, because ufw limit the rate.
       - name: Restart the containers
-        env:
-          SEARCH_APIKEY: ${{ secrets.SEARCH_APIKEY }}
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.SRS_DROPLET_EIP }}
