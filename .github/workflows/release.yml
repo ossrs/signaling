@@ -80,4 +80,10 @@ jobs:
                 registry.cn-hangzhou.aliyuncs.com/ossrs/signaling:$SRS_MAJOR
             END
             bash /root/restart_docs-signaling.sh
+            #
+            # Cleanup old docker images.
+            for image in $(docker images |grep '<none>' |awk '{print $3}'); do
+              docker rmi -f $image
+              echo "Remove image $image, r0=$?"
+            done
 
