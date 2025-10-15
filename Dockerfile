@@ -2,7 +2,7 @@
 ############################################################
 # build
 ############################################################
-FROM registry.cn-hangzhou.aliyuncs.com/ossrs/srs:ubuntu20 AS build
+FROM ossrs/srs:ubuntu20 AS build
 
 COPY . /tmp/signaling
 RUN cd /tmp/signaling && make
